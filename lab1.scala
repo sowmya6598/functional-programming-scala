@@ -15,7 +15,7 @@ should output 12 13 14 15
 
 
 
-def s0(y: Int, x: Int = 0) {
+def s0(y: Int, x: Int = 0) = {
   if (y > x) {
     for (a <- x until y) {
       println(a)
