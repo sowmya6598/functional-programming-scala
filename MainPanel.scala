@@ -2,10 +2,10 @@ package plotter
 
 import java.awt.Insets
 
-import plotter.Functions.supportedFunctions
 import plotter.UIUtils._
-import scala.swing.ListView.Renderer
-import scala.swing.{Button, ComboBox, GridBagPanel}
+import plotter.functions.Evaluate.evaluate
+
+import scala.swing.{Button, GridBagPanel}
 
 // Inheritance (Lecture 6)
 // Singleton (Lecture 5)
@@ -16,15 +16,12 @@ object MainPanel extends GridBagPanel {
   private val minXField = textField("1")
   private val maxXField = textField("20")
   private val plotButton = Button("Plot") { repaintGraph() }
-
-  private val functionBox = new ComboBox[Function](supportedFunctions) {
-    renderer = Renderer(_.name)
-  }
+  private val functionField = textField("1")
 
   add(graph.component, constraints(0, 0, gridWidth=4, fill=GridBagPanel.Fill.Horizontal))
 
   add(label("Function"), constraints(0, 1))
-  add(functionBox, constraints(1, 1))
+  add(functionField, constraints(1, 1))
   add(label("Min X"), constraints(2, 1))
   add(minXField, constraints(3, 1))
 
@@ -36,7 +33,7 @@ object MainPanel extends GridBagPanel {
   add(plotButton, constraints(3, 3))
 
   private def repaintGraph(): Unit =
-    graph.draw(functionBox.selection.item,
+    graph.draw(x => evaluate(x, functionField.text),
       readFromTextField[Int](numberOfPointsField, _.toInt, 0),
       readFromTextField[Double](minXField, _.toDouble, 0),
       readFromTextField[Double](maxXField, _.toDouble, 0))
